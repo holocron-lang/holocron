@@ -1,0 +1,101 @@
+name: Release
+
+# Automated semantic release. On every push to main (i.e. when a PR merges),
+# cocogitto reads the Conventional Commits since the last tag, computes the next
+# version, bumps Cargo.toml, updates CHANGELOG.md, and creates the version commit
+# and tag. The tag then drives the GitHub Release and (when configured) the
+# crates.io publish. No release PR — the tag is created automatically.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Needed to push the bump commit + tag and to create the GitHub Release.
+permissions:
+  contents: write
+
+# Never run two releases at once, and never cancel one mid-publish.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  release:
+    name: Semantic release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # full history so cocogitto can analyse every commit
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+
+      # Prebuilt binaries — fast, no compilation.
+      - uses: cargo-bins/cargo-binstall@main
+      - name: Install cocogitto and cargo-edit
+        run: cargo binstall -y cocogitto cargo-edit
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Bump version, update changelog, and tag
+        id: bump
+        run: |
+          before=$(git describe --tags --abbrev=0 2>/dev/null || echo "none")
+          # `cog bump --auto` exits non-zero when there are no releasable commits.
+          if cog bump --auto; then
+            tag=$(git describe --tags --abbrev=0)
+            echo "released=true" >> "$GITHUB_OUTPUT"
+            echo "tag=$tag" >> "$GITHUB_OUTPUT"
+            echo "Released $tag (previous: $before)"
+          else
+            echo "released=false" >> "$GITHUB_OUTPUT"
+            echo "No releasable changes since $before — skipping release."
+          fi
+
+      - name: Push commit and tag
+        if: steps.bump.outputs.released == 'true'
+        run: git push --follow-tags origin HEAD:main
+
+      - name: Extract release notes
+        if: steps.bump.outputs.released == 'true'
+        # Take the newest section of the changelog cocogitto just wrote (from the
+        # first "## " heading up to the next one). Avoids re-parsing old, possibly
+        # non-conventional history, which `cog changelog --at` would choke on.
+        run: awk '/^## /{n++} n==1{print} n==2{exit}' CHANGELOG.md > RELEASE_NOTES.md
+
+      - name: Create GitHub Release
+        if: steps.bump.outputs.released == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.bump.outputs.tag }}
+          body_path: RELEASE_NOTES.md
+
+      # Publishing only runs once a crates.io token is configured, so a pre-release
+      # stub is never published by accident. Add the CARGO_REGISTRY_TOKEN secret to
+      # enable it (Settings → Secrets and variables → Actions).
+      - name: Check for crates.io token
+        if: steps.bump.outputs.released == 'true'
+        id: cratesio
+        env:
+          TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: |
+          if [ -n "$TOKEN" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "CARGO_REGISTRY_TOKEN not set — skipping crates.io publish."
+          fi
+
+      - name: Publish to crates.io
+        if: steps.bump.outputs.released == 'true' && steps.cratesio.outputs.enabled == 'true'
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: cargo publish

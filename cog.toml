@@ -1,0 +1,24 @@
+# Cocogitto configuration — https://docs.cocogitto.io
+# Drives automated, conventional-commit-based releases (see .github/workflows/release.yml).
+
+# Tags are prefixed with "v" (e.g. v0.1.0), the Rust/GitHub convention.
+tag_prefix = "v"
+
+# Only release from main.
+branch_whitelist = ["main"]
+
+# Merge commits aren't conventional commits; don't let them break version analysis.
+ignore_merge_commits = true
+
+# Before creating the bump commit, sync the version in Cargo.toml + Cargo.lock so
+# the committed/tagged tree matches the released version (cargo-edit provides set-version).
+pre_bump_hooks = [
+  "cargo set-version {{version}}",
+]
+
+[changelog]
+path = "CHANGELOG.md"
+remote = "github.com"
+repository = "holocron"
+owner = "extinctCoder"
+authors = []

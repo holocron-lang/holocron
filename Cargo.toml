@@ -4,6 +4,7 @@ version = "0.0.0"
 edition = "2021"
 description = "Declarative schema & query compiler — one YAML as the source of truth for SQL schema and a type-checked query catalog."
 license = "MIT OR Apache-2.0"
+repository = "https://github.com/extinctCoder/holocron"
 keywords = ["sql", "schema", "compiler", "query", "yaml"]
 categories = ["database", "compilers"]
 
