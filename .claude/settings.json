@@ -69,7 +69,10 @@
       "Bash(env -u SSL_CERT_FILE -u REQUESTS_CA_BUNDLE curl -fsSL https://www.mozilla.org/media/MPL/2.0/index.txt -o LICENSE)",
       "Bash(python3 -c ' *)",
       "Bash(python3 -c \"import yaml; d=yaml.safe_load\\(open\\('.github/workflows/scorecard.yml'\\)\\); print\\('scorecard.yml OK — job:', list\\(d['jobs'].keys\\(\\)\\), '| triggers:', list\\(\\(d.get\\(True\\) or d.get\\('on'\\)\\).keys\\(\\)\\)\\)\")",
-      "Bash(env -u SSL_CERT_FILE -u REQUESTS_CA_BUNDLE curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" \"https://api.securityscorecards.dev/projects/github.com/extinctCoder/holocron/badge\")"
+      "Bash(env -u SSL_CERT_FILE -u REQUESTS_CA_BUNDLE curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" \"https://api.securityscorecards.dev/projects/github.com/extinctCoder/holocron/badge\")",
+      "Bash(env -u GITHUB_TOKEN gh api repos/ossf/scorecard-action/releases/latest --jq '.tag_name')",
+      "Bash(env -u GITHUB_TOKEN gh api repos/ossf/scorecard-action/tags --jq '.[].name')",
+      "Bash(python3 -c \"import yaml; yaml.safe_load\\(open\\('.github/workflows/scorecard.yml'\\)\\); print\\('scorecard.yml OK'\\)\")"
     ],
     "additionalDirectories": [
       "/Users/extinctcoder"
