@@ -1,7 +1,7 @@
-name: Commit Lint
+name: Commit Messages
 
-# Validate that commit messages follow the Conventional Commits spec
-# (https://www.conventionalcommits.org) on every push to any branch and on PRs.
+# Enforces the Conventional Commits specification (https://www.conventionalcommits.org)
+# on commit messages, for every push to any branch and on pull requests.
 on:
   push:
   pull_request:
@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   commitlint:
-    name: Validate commit messages
+    name: Conventional Commits (commitlint)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7

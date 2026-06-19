@@ -1,5 +1,7 @@
 name: Security Audit
 
+# Scans the dependency tree for known vulnerabilities (RustSec advisories).
+# Runs when dependencies change and weekly, to catch newly-disclosed advisories.
 on:
   push:
     branches: [main]
@@ -21,7 +23,7 @@ permissions:
 
 jobs:
   audit:
-    name: cargo audit
+    name: Vulnerability Scan (cargo-audit)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
