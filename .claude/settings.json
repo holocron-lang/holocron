@@ -56,7 +56,8 @@
       "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('crates.io max version:', d['crate']['max_version']\\) if d.get\\('crate'\\) else print\\('NOT on crates.io yet'\\)\")",
       "Bash(git checkout *)",
       "Bash(env -u GITHUB_TOKEN git pull --ff-only origin main)",
-      "Bash(python3 -c \"import yaml; yaml.safe_load\\(open\\('.github/workflows/release.yml'\\)\\); print\\('release.yml OK'\\)\")"
+      "Bash(python3 -c \"import yaml; yaml.safe_load\\(open\\('.github/workflows/release.yml'\\)\\); print\\('release.yml OK'\\)\")",
+      "Bash(RUSTDOCFLAGS=\"-D warnings\" cargo doc --no-deps -q)"
     ],
     "additionalDirectories": [
       "/Users/extinctcoder"

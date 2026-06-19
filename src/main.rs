@@ -8,6 +8,11 @@
 //!
 //! This crate is currently a pre-implementation stub; see `holocron-seed/DESIGN.md`
 //! for the full design and roadmap.
+//!
+//! ## Links
+//!
+//! - **Repository:** <https://github.com/extinctCoder/holocron>
+//! - **Issues:** <https://github.com/extinctCoder/holocron/issues>
 
 /// Returns the project's banner line.
 ///
