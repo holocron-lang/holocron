@@ -18,6 +18,9 @@ pre_bump_hooks = [
 
 [changelog]
 path = "CHANGELOG.md"
+# "remote" template turns commit hashes, authors, and versions into clickable
+# links to GitHub (requires remote/repository/owner below).
+template = "remote"
 remote = "github.com"
 repository = "holocron"
 owner = "extinctCoder"
