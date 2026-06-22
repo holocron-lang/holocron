@@ -1,0 +1,61 @@
+# Realistic happy path: a blog with users, posts, comments, and a view that
+# joins posts to their authors. Exercises types, multiple tables, an index,
+# a view with a LEFT JOIN, raw WHERE/ORDER BY clauses, and per-column
+# filterable/searchable flags on the view's select items.
+#
+# Run: cargo run -- samples/blog.yml
+
+types:
+  - name: post_status
+    enum: [Draft, Published, Archived]
+
+tables:
+  - name: users
+    columns:
+      user_id:    { type: uuid }
+      username:   { type: text }
+      email:      { type: text }
+      created_at: { type: timestamptz, default: "now()" }
+    primary_key: { columns: [user_id] }
+    indexes:
+      - { name: idx_users_email, columns: [email], unique: true }
+
+  - name: posts
+    columns:
+      post_id:      { type: uuid }
+      author_id:    { type: uuid }
+      title:        { type: text }
+      body:         { type: text }
+      status:       { type: post_status, default: "'Draft'" }
+      published_at: { type: timestamptz, null: true }
+    primary_key: { columns: [post_id] }
+    indexes:
+      - { name: idx_posts_status, columns: [status] }
+
+  - name: comments
+    columns:
+      comment_id: { type: uuid }
+      post_id:    { type: uuid }
+      author_id:  { type: uuid }
+      body:       { type: text }
+      created_at: { type: timestamptz, default: "now()" }
+    primary_key: { columns: [comment_id] }
+
+views:
+  - name: posts_with_authors
+    or_replace: true
+    from: { table: posts, as: p }
+    join:
+      - table: users
+        as: u
+        type: LEFT
+        on: "u.user_id = p.author_id"
+    select:
+      - { column: post_id,      from: p }
+      - { column: title,        from: p, searchable: true }
+      - { column: body,         from: p, searchable: true, filterable: false }
+      - { column: status,       from: p }
+      - { column: published_at, from: p }
+      - { column: username,     from: u, as: author }
+    where: "p.status = 'Published'"
+    order_by: "p.published_at DESC"

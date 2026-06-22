@@ -1,36 +1,59 @@
-//! # Holocron
-//!
-//! A **declarative schema & query compiler** — one YAML file is the single source
-//! of truth for both a database schema *and* a type-checked query catalog.
-//!
-//! Any query (in RSQL or YAML) is validated against the catalog **before it runs**,
-//! with no database connection needed, because the YAML *is* the schema.
-//!
-//! This crate is currently a pre-implementation stub; see `holocron-seed/DESIGN.md`
-//! for the full design and roadmap.
-//!
-//! ## Links
-//!
-//! - **Repository:** <https://github.com/extinctCoder/holocron>
-//! - **Issues:** <https://github.com/extinctCoder/holocron/issues>
+//! Holocron CLI — compile a YAML schema into PostgreSQL DDL.
 
-/// Returns the project's banner line.
-///
-/// Kept as a small documented function so the generated docs (`cargo doc --open`)
-/// have real content to show while the compiler itself is being built out.
-///
-/// # Examples
-///
-/// ```
-/// // The banner names the tool and its purpose.
-/// let banner = "Hello from Holocron — a declarative schema & query compiler.";
-/// assert!(banner.contains("Holocron"));
-/// ```
-fn banner() -> &'static str {
-    "Hello from Holocron — a declarative schema & query compiler for version 2."
+use std::env;
+use std::fs;
+use std::io::{self, Read};
+use std::process::ExitCode;
+
+use holocron::compile;
+
+const USAGE: &str = "\
+Usage: holocron [FILE]
+
+Compiles a YAML schema into PostgreSQL DDL.
+
+Reads from FILE if given (or '-' / no arg for stdin).
+Writes DDL to stdout; errors to stderr.";
+
+fn main() -> ExitCode {
+    let mut args = env::args().skip(1);
+    let first = args.next();
+    if matches!(first.as_deref(), Some("--help") | Some("-h")) {
+        println!("{USAGE}");
+        return ExitCode::SUCCESS;
+    }
+    if args.next().is_some() {
+        eprintln!("error: too many arguments\n\n{USAGE}");
+        return ExitCode::FAILURE;
+    }
+
+    let input = match read_input(first.as_deref()) {
+        Ok(text) => text,
+        Err(error) => {
+            eprintln!("error: {error}");
+            return ExitCode::FAILURE;
+        }
+    };
+
+    match compile(&input) {
+        Ok(result) => {
+            print!("{}", result.ddl);
+            ExitCode::SUCCESS
+        }
+        Err(error) => {
+            eprintln!("error: {error}");
+            ExitCode::FAILURE
+        }
+    }
 }
 
-/// Program entry point. Prints the project [`banner`].
-fn main() {
-    println!("{}", banner());
+fn read_input(path: Option<&str>) -> io::Result<String> {
+    match path {
+        Some("-") | None => {
+            let mut buffer = String::new();
+            io::stdin().read_to_string(&mut buffer)?;
+            Ok(buffer)
+        }
+        Some(file) => fs::read_to_string(file),
+    }
 }

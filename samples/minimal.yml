@@ -1,0 +1,19 @@
+# Minimal happy path: one enum, one table.
+# Run: cargo run -- samples/minimal.yml
+
+types:
+  - name: task_state
+    enum: [Open, InProgress, Done]
+
+tables:
+  - name: tasks
+    columns:
+      task_id:    { type: uuid }
+      title:      { type: text }
+      state:      { type: task_state, default: "'Open'" }
+      created_at: { type: timestamptz, default: "now()" }
+      archived:   { type: boolean, default: "false" }
+      note:       { type: text, null: true }
+    primary_key: { columns: [task_id] }
+    indexes:
+      - { name: idx_tasks_state, columns: [state] }

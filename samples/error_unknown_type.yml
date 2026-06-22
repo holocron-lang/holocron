@@ -1,0 +1,11 @@
+# Should fail: `not_a_real_type` is neither a built-in nor a declared enum.
+# Caught by L2 (catalog build) — exit 1.
+#
+# Run: cargo run -- samples/error_unknown_type.yml
+
+tables:
+  - name: tasks
+    columns:
+      task_id: { type: uuid }
+      priority: { type: not_a_real_type }
+    primary_key: { columns: [task_id] }

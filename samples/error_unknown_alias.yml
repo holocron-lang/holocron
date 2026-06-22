@@ -1,0 +1,17 @@
+# Should fail: the select references alias `x`, which was never declared in
+# `from:` or `join:`. Caught by L3 (resolve views) — exit 1.
+#
+# Run: cargo run -- samples/error_unknown_alias.yml
+
+tables:
+  - name: tasks
+    columns:
+      task_id: { type: uuid }
+      title:   { type: text }
+    primary_key: { columns: [task_id] }
+
+views:
+  - name: open_tasks
+    from: { table: tasks, as: t }
+    select:
+      - { column: task_id, from: x }   # alias `x` not declared
