@@ -7,12 +7,12 @@ pub(crate) fn emit_table(output: &mut String, table: &Table) {
     if table.if_not_exists {
         output.push_str("IF NOT EXISTS ");
     }
-    output.push_str(&quote_ident(&table.name));
+    output.push_str(&quote_ident(&table.name.value));
     output.push_str(" (\n");
 
     let mut entries: Vec<String> = Vec::with_capacity(table.columns.len() + 1);
     for (name, column) in &table.columns {
-        let mut line = format!("    {} {}", quote_ident(name), column.r#type);
+        let mut line = format!("    {} {}", quote_ident(name), column.r#type.value);
         if !column.null {
             line.push_str(" NOT NULL");
         }

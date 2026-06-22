@@ -1,0 +1,58 @@
+# A happy-path sample exercising most of the YAML surface Holocron supports:
+# enums; typed columns with defaults, NULL handling, and constraints; primary
+# keys (named and anonymous); indexes (unique, partial via `where`, custom
+# `using`); views with multiple joins, raw WHERE/ORDER BY/LIMIT, and
+# per-column filterable/searchable flags.
+#
+# Run: cargo run -- samples/full_features.yml
+
+types:
+  - name: priority
+    enum: [Low, Normal, High, Critical]
+
+tables:
+  - name: users
+    if_not_exists: true
+    columns:
+      user_id:    { type: uuid }
+      username:   { type: text }
+      email:      { type: text }
+      bio:        { type: text, null: true }
+      created_at: { type: timestamptz, default: "now()" }
+    primary_key: { name: pk_users, columns: [user_id] }
+    indexes:
+      - { name: idx_users_email,  columns: [email],    unique: true }
+      - { name: idx_users_active, columns: [username], using: btree, where: "bio IS NOT NULL" }
+
+  - name: tasks
+    columns:
+      task_id:    { type: uuid }
+      owner_id:   { type: uuid }
+      title:      { type: text }
+      body:       { type: text, null: true }
+      priority:   { type: priority, default: "'Normal'" }
+      created_at: { type: timestamptz, default: "now()" }
+      done:       { type: boolean, default: "false" }
+    primary_key: { columns: [task_id] }
+    indexes:
+      - { name: idx_tasks_owner, columns: [owner_id] }
+
+views:
+  - name: open_tasks
+    or_replace: true
+    from: { table: tasks, as: t }
+    join:
+      - table: users
+        as: u
+        type: LEFT
+        on: "u.user_id = t.owner_id"
+    select:
+      - { column: task_id,    from: t }
+      - { column: title,      from: t, searchable: true }
+      - { column: body,       from: t, searchable: true, filterable: false }
+      - { column: priority,   from: t }
+      - { column: created_at, from: t }
+      - { column: username,   from: u, as: owner }
+    where: "t.done = false"
+    order_by: "t.created_at DESC"
+    limit: 100

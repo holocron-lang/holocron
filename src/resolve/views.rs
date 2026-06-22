@@ -15,7 +15,7 @@ pub fn resolve_views(
 ) -> Result<Catalog, HolocronError> {
     for view in &document.views {
         let relation = resolve_view(view, &catalog)?;
-        catalog.insert_relation(relation)?;
+        catalog.insert_relation(relation, view.name.span)?;
     }
     Ok(catalog)
 }
@@ -24,7 +24,7 @@ fn resolve_view(view: &View, catalog: &Catalog) -> Result<CatalogRelation, Holoc
     let scope = Scope::build(view, catalog)?;
     let columns = resolve_columns(view, &scope)?;
     Ok(CatalogRelation {
-        name: view.name.clone(),
+        name: view.name.value.clone(),
         kind: RelationKind::View,
         columns,
     })

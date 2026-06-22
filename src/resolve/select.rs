@@ -23,28 +23,52 @@ fn resolve_item(
 ) -> Result<CatalogColumn, HolocronError> {
     let select = match item {
         SelectItem::Column(select) => select,
-        SelectItem::Expression(_) => {
+        SelectItem::Expression(expression) => {
             return Err(HolocronError::unsupported(
                 "expression select items are not yet supported",
+                expression.span,
             ));
         }
     };
 
     // Resolve the source relation: the named alias, or the sole source if omitted.
     let relation = match &select.from {
-        Some(alias) => scope
-            .relation(alias)
-            .ok_or_else(|| HolocronError::unknown_alias(&view.name, alias))?,
-        None => scope
-            .sole_relation()
-            .ok_or_else(|| HolocronError::ambiguous_source(&view.name, &select.column))?,
+        Some(alias) => scope.relation(&alias.value).ok_or_else(|| {
+            HolocronError::unknown_alias(
+                &view.name.value,
+                &alias.value,
+                scope.alias_names(),
+                alias.span,
+            )
+        })?,
+        None => scope.sole_relation().ok_or_else(|| {
+            HolocronError::ambiguous_source(
+                &view.name.value,
+                &select.column.value,
+                scope.alias_names(),
+                select.column.span,
+            )
+        })?,
     };
 
-    let source = relation
-        .column(&select.column)
-        .ok_or_else(|| HolocronError::unknown_column(&relation.name, &select.column))?;
+    let source = relation.column(&select.column.value).ok_or_else(|| {
+        let candidates = relation
+            .columns
+            .iter()
+            .map(|column| column.name.clone())
+            .collect();
+        HolocronError::unknown_column(
+            &relation.name,
+            &select.column.value,
+            candidates,
+            select.column.span,
+        )
+    })?;
 
-    let name = select.r#as.clone().unwrap_or_else(|| select.column.clone());
+    let name = select
+        .r#as
+        .clone()
+        .unwrap_or_else(|| select.column.value.clone());
     Ok(CatalogColumn {
         name,
         data_type: source.data_type.clone(),

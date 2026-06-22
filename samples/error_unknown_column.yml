@@ -1,0 +1,18 @@
+# Should fail: the view selects a column the table doesn't have.
+# Caught by L3 — exit 1. The diagnostic lists the columns that ARE on
+# the relation as a "did you mean" note.
+#
+# Run: cargo run -- samples/error_unknown_column.yml
+
+tables:
+  - name: tasks
+    columns:
+      task_id: { type: uuid }
+      title:   { type: text }
+    primary_key: { columns: [task_id] }
+
+views:
+  - name: bad_column_view
+    from: { table: tasks, as: t }
+    select:
+      - { column: ghost_column, from: t }

@@ -10,7 +10,7 @@ pub(crate) fn emit(output: &mut String, view: &View) {
         output.push_str("OR REPLACE ");
     }
     output.push_str("VIEW ");
-    output.push_str(&quote_ident(&view.name));
+    output.push_str(&quote_ident(&view.name.value));
     output.push_str(" AS\nSELECT");
 
     if let Some(distinct_on) = &view.distinct_on {
@@ -36,17 +36,17 @@ pub(crate) fn emit(output: &mut String, view: &View) {
     }
 
     output.push_str("FROM ");
-    output.push_str(&quote_ident(&view.from.table));
+    output.push_str(&quote_ident(&view.from.table.value));
     output.push_str(" AS ");
-    output.push_str(&quote_ident(&view.from.r#as));
+    output.push_str(&quote_ident(&view.from.r#as.value));
 
     for join in &view.join {
         output.push('\n');
         output.push_str(join_kind_sql(join.r#type));
         output.push_str(" JOIN ");
-        output.push_str(&quote_ident(&join.table));
+        output.push_str(&quote_ident(&join.table.value));
         output.push_str(" AS ");
-        output.push_str(&quote_ident(&join.r#as));
+        output.push_str(&quote_ident(&join.r#as.value));
         // Join condition is raw SQL, passed through verbatim.
         output.push_str(" ON ");
         output.push_str(&join.on);
@@ -77,14 +77,14 @@ fn emit_select_item(item: &SelectItem) -> String {
 fn emit_select_column(column: &SelectColumn) -> String {
     let mut sql = String::new();
     if let Some(alias) = &column.from {
-        sql.push_str(&quote_ident(alias));
+        sql.push_str(&quote_ident(&alias.value));
         sql.push('.');
     }
-    sql.push_str(&quote_ident(&column.column));
+    sql.push_str(&quote_ident(&column.column.value));
     // Only emit AS when the output name differs from the source — same name
     // adds no meaning and just clutters the SQL.
     if let Some(output_name) = &column.r#as {
-        if *output_name != column.column {
+        if *output_name != column.column.value {
             sql.push_str(" AS ");
             sql.push_str(&quote_ident(output_name));
         }

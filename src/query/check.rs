@@ -95,9 +95,20 @@ fn resolve_filterable<'r>(
     relation: &'r CatalogRelation,
     column: &str,
 ) -> Result<&'r CatalogColumn, HolocronError> {
-    let resolved = relation
-        .column(column)
-        .ok_or_else(|| HolocronError::unknown_column(relation_name, column))?;
+    let resolved = relation.column(column).ok_or_else(|| {
+        let candidates = relation
+            .columns
+            .iter()
+            .map(|column| column.name.clone())
+            .collect();
+        // Queries are built programmatically in this layer; no AST span to attach.
+        HolocronError::unknown_column(
+            relation_name,
+            column,
+            candidates,
+            crate::span::Span::default(),
+        )
+    })?;
     if !resolved.filterable {
         return Err(HolocronError::not_filterable(relation_name, column));
     }

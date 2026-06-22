@@ -1,0 +1,15 @@
+# Should fail: two tables declared with the same name.
+# Caught by L2 (catalog build) — exit 1.
+#
+# Run: cargo run -- samples/error_duplicate_relation.yml
+
+tables:
+  - name: tasks
+    columns:
+      task_id: { type: uuid }
+    primary_key: { columns: [task_id] }
+
+  - name: tasks                   # collision: `tasks` already declared above
+    columns:
+      id: { type: uuid }
+    primary_key: { columns: [id] }

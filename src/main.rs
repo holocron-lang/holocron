@@ -27,6 +27,10 @@ fn main() -> ExitCode {
         return ExitCode::FAILURE;
     }
 
+    let filename = first
+        .as_deref()
+        .filter(|name| *name != "-")
+        .unwrap_or("<stdin>");
     let input = match read_input(first.as_deref()) {
         Ok(text) => text,
         Err(error) => {
@@ -41,7 +45,8 @@ fn main() -> ExitCode {
             ExitCode::SUCCESS
         }
         Err(error) => {
-            eprintln!("error: {error}");
+            // Render with ariadne so the offending YAML line gets a `^^^` underline.
+            eprint!("{}", error.render(filename, &input));
             ExitCode::FAILURE
         }
     }

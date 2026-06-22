@@ -1,0 +1,23 @@
+# Should fail: the select column omits `from:`, but the view has more than
+# one source (a `from` + a `join`), so Holocron can't infer which one.
+# Caught by L3 (resolve views) — exit 1.
+#
+# Fix: add `from: a` or `from: b` to the select item.
+#
+# Run: cargo run -- samples/error_ambiguous_source.yml
+
+tables:
+  - name: a
+    columns: { id: { type: uuid } }
+    primary_key: { columns: [id] }
+  - name: b
+    columns: { id: { type: uuid }, label: { type: text } }
+    primary_key: { columns: [id] }
+
+views:
+  - name: ambig_view
+    from: { table: a, as: a }
+    join:
+      - { table: b, as: b, type: LEFT, on: "b.id = a.id" }
+    select:
+      - { column: id }            # no `from` — ambiguous

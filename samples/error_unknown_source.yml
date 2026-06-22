@@ -1,0 +1,17 @@
+# Should fail: the view's `from:` references a table that wasn't declared.
+# Caught by L3 (resolve views) — exit 1. The diagnostic lists every relation
+# the catalog DID know about, as a "did you mean" note.
+#
+# Run: cargo run -- samples/error_unknown_source.yml
+
+tables:
+  - name: tasks
+    columns:
+      task_id: { type: uuid }
+    primary_key: { columns: [task_id] }
+
+views:
+  - name: missing_table_view
+    from: { table: doesnt_exist, as: m }
+    select:
+      - { column: task_id, from: m }

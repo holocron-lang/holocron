@@ -1,0 +1,25 @@
+# Should fail: `SIDEWAYS` is not one of the four join kinds Holocron emits.
+# Caught by L1 (parse) — exit 1.
+#
+# Valid kinds: INNER, LEFT, RIGHT, FULL.
+#
+# Run: cargo run -- samples/error_bad_join_type.yml
+
+tables:
+  - name: a
+    columns: { id: { type: uuid } }
+    primary_key: { columns: [id] }
+  - name: b
+    columns: { id: { type: uuid } }
+    primary_key: { columns: [id] }
+
+views:
+  - name: bad_join_view
+    from: { table: a, as: a }
+    join:
+      - table: b
+        as: b
+        type: SIDEWAYS
+        on: "b.id = a.id"
+    select:
+      - { column: id, from: a }

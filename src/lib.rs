@@ -7,6 +7,7 @@ mod emit;
 mod error;
 mod query;
 mod resolve;
+mod span;
 
 pub use ast::{
     parse_schema, Column, EnumType, FromClause, Index, Join, JoinKind, PrimaryKey, SchemaDocument,
@@ -20,3 +21,4 @@ pub use emit::emit_schema;
 pub use error::HolocronError;
 pub use query::{check_query, CheckedQuery, CompareOp, Comparison, Filter, Query, SetOp};
 pub use resolve::resolve_views;
+pub use span::{Span, Spanned};

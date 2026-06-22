@@ -25,7 +25,7 @@ pub fn emit_schema(document: &SchemaDocument) -> String {
     // Indexes after every table is created, so they reference real tables.
     for one_table in &document.tables {
         for index in &one_table.indexes {
-            table::emit_index(&mut output, &one_table.name, index);
+            table::emit_index(&mut output, &one_table.name.value, index);
         }
     }
     for one_view in &document.views {

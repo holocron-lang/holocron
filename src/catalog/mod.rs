@@ -13,6 +13,7 @@ pub use relation::{CatalogRelation, RelationKind};
 use indexmap::IndexMap;
 
 use crate::error::HolocronError;
+use crate::span::Span;
 
 /// The symbol table: relations and enum types, each looked up by name.
 /// Ordered maps keep iteration (and therefore emitted output) deterministic.
@@ -20,6 +21,9 @@ use crate::error::HolocronError;
 pub struct Catalog {
     relations: IndexMap<String, CatalogRelation>,
     enums: IndexMap<String, Vec<String>>,
+    /// Original declaration spans, kept alongside the relations so a duplicate
+    /// diagnostic can underline the *first* occurrence as well as the second.
+    relation_spans: IndexMap<String, Span>,
 }
 
 impl Catalog {
@@ -39,14 +43,20 @@ impl Catalog {
     }
 
     /// Add a relation, erroring if one with the same name already exists.
+    /// `name_span` points the diagnostic at the offending name in the source.
     pub(crate) fn insert_relation(
         &mut self,
         relation: CatalogRelation,
+        name_span: Span,
     ) -> Result<(), HolocronError> {
         let name = relation.name.clone();
-        if self.relations.insert(name.clone(), relation).is_some() {
-            return Err(HolocronError::duplicate_relation(name));
+        if let Some(&first_span) = self.relation_spans.get(&name) {
+            return Err(HolocronError::duplicate_relation(
+                name, first_span, name_span,
+            ));
         }
+        self.relation_spans.insert(name.clone(), name_span);
+        self.relations.insert(name, relation);
         Ok(())
     }
 }
