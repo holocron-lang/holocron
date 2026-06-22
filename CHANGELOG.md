@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.3.0](https://github.com/extinctCoder/holocron/compare/83b99de1c8d36e659e42f4bf7bb62fd7be25d699..v0.3.0) - 2026-06-22
+#### Features
+- added lsp servers - ([83b99de](https://github.com/extinctCoder/holocron/commit/83b99de1c8d36e659e42f4bf7bb62fd7be25d699)) - darthVader
+#### Documentation
+- add install + editor integration sections - ([058f577](https://github.com/extinctCoder/holocron/commit/058f577925aa39bfd23e66c7b4ae92746fa3d8fe)) - darthVader, Claude Opus 4.7 (1M context)
+#### Miscellaneous Chores
+- (**ci**) ship both binaries in release archive - ([34aff65](https://github.com/extinctCoder/holocron/commit/34aff657aa71a87468706965725d9eeaa748eb82)) - darthVader, Claude Opus 4.7 (1M context)
+
+- - -
+
 ## [v0.2.0](https://github.com/extinctCoder/holocron/compare/694b6f616caa73ec1670e54af2b3814bf4a08d72..v0.2.0) - 2026-06-22
 #### Features
 - updated error reporting - ([30d7292](https://github.com/extinctCoder/holocron/commit/30d7292184f0d423b1b1ea453b82209a6d946077)) - darthVader
