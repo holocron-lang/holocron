@@ -2,6 +2,22 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.2.0](https://github.com/extinctCoder/holocron/compare/694b6f616caa73ec1670e54af2b3814bf4a08d72..v0.2.0) - 2026-06-22
+#### Features
+- updated error reporting - ([30d7292](https://github.com/extinctCoder/holocron/commit/30d7292184f0d423b1b1ea453b82209a6d946077)) - darthVader
+- added the with some sample views and updated - ([73377a6](https://github.com/extinctCoder/holocron/commit/73377a660cd919978c69be36815fa3bab02fd424)) - darthVader
+- added l1 - l5 in the codebase - ([f4550ec](https://github.com/extinctCoder/holocron/commit/f4550ec48ff6f797d55743202b5a710c412e9e65)) - darthVader
+- added l3 layer for catalogue conversion from raw ast - ([ed3ace6](https://github.com/extinctCoder/holocron/commit/ed3ace68b719c677a48f39af196469e2b33dcea8)) - darthVader
+- added l2 layer for catalogue conversion from raw ast - ([89a9c92](https://github.com/extinctCoder/holocron/commit/89a9c92062ddd8def3bf7ea0e35fdacbefa723a8)) - darthVader
+- added l2 layer for catalogue conversion from raw ast - ([f6a7e85](https://github.com/extinctCoder/holocron/commit/f6a7e85971bc977bb07f816c23275789fa50d77e)) - darthVader
+- added sql vocabulary as in ast folder - ([a342848](https://github.com/extinctCoder/holocron/commit/a342848364a02a090b49db84448580ce1f83489b)) - darthVader
+- added sql vocabulary as in ast folder - ([d4eeb02](https://github.com/extinctCoder/holocron/commit/d4eeb027d1cc26c6a25422fbe2181f0c8d93888c)) - darthVader
+- updateed the codebase - ([694b6f6](https://github.com/extinctCoder/holocron/commit/694b6f616caa73ec1670e54af2b3814bf4a08d72)) - darthVader
+#### Miscellaneous Chores
+- added vocabulary docs - ([4b5e348](https://github.com/extinctCoder/holocron/commit/4b5e34876a705e621668054e39bec2f12b7d1fcc)) - darthVader
+
+- - -
+
 ## [v0.1.8](https://github.com/extinctCoder/holocron/compare/f4a90bff5eec14657ad4d49ec05f25db15e88764..v0.1.8) - 2026-06-19
 #### Bug Fixes
 - another - ([f4a90bf](https://github.com/extinctCoder/holocron/commit/f4a90bff5eec14657ad4d49ec05f25db15e88764)) - darthVader
