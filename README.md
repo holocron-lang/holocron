@@ -42,10 +42,10 @@ query/authz/read contract, consumable from any language.
 
 🚧 **Active development.** The compiler pipeline parses, builds a catalog, resolves
 views, type-checks queries, and emits PostgreSQL DDL end-to-end — with rich,
-rustc-style diagnostics that underline the exact YAML token at fault. The LSP server
-gives live in-editor squiggles. Still in flight: error-collection (currently bail-on-first),
-DML emit, and the RSQL parser. Full roadmap in
-[`holocron-seed/DESIGN.md`](holocron-seed/DESIGN.md).
+rustc-style diagnostics that underline the exact YAML token at fault and surface
+every error in one pass instead of one-at-a-time. The LSP server gives live
+in-editor squiggles. Still in flight: DML emit for queries, and the RSQL parser.
+Full roadmap in [`holocron-seed/DESIGN.md`](holocron-seed/DESIGN.md).
 
 ## Install
 
