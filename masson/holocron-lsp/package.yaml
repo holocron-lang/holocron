@@ -9,22 +9,22 @@ categories:
   - LSP
 
 source:
-  id: pkg:github/holocron-lang/holocron@v0.3.0
+  id: pkg:github/holocron-lang/holocron-lsp@v0.1.0
   asset:
     - target: darwin_x64
-      file: holocron-v{{ version }}-x86_64-apple-darwin.tar.gz
+      file: holocron-lsp-v{{ version }}-x86_64-apple-darwin.tar.gz
       bin: holocron-lsp
     - target: darwin_arm64
-      file: holocron-v{{ version }}-aarch64-apple-darwin.tar.gz
+      file: holocron-lsp-v{{ version }}-aarch64-apple-darwin.tar.gz
       bin: holocron-lsp
     - target: linux_x64_gnu
-      file: holocron-v{{ version }}-x86_64-unknown-linux-gnu.tar.gz
+      file: holocron-lsp-v{{ version }}-x86_64-unknown-linux-gnu.tar.gz
       bin: holocron-lsp
     - target: linux_arm64_gnu
-      file: holocron-v{{ version }}-aarch64-unknown-linux-gnu.tar.gz
+      file: holocron-lsp-v{{ version }}-aarch64-unknown-linux-gnu.tar.gz
       bin: holocron-lsp
     - target: win_x64
-      file: holocron-v{{ version }}-x86_64-pc-windows-msvc.zip
+      file: holocron-lsp-v{{ version }}-x86_64-pc-windows-msvc.zip
       bin: holocron-lsp.exe
 
 bin:

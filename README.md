@@ -50,17 +50,19 @@ DML emit, and the RSQL parser. Full roadmap in
 ## Install
 
 ```sh
-cargo install holocron
+cargo install holocron         # the CLI compiler
+cargo install holocron-lsp     # the LSP server (separate crate)
 ```
 
-Installs two binaries:
-
-- **`holocron`** — the CLI compiler
-- **`holocron-lsp`** — the editor LSP server
+The LSP server lives in its own repo
+([`holocron-lang/holocron-lsp`](https://github.com/holocron-lang/holocron-lsp))
+so the CLI install stays slim — no `tokio`/`tower-lsp` deps for users who
+only need YAML → SQL.
 
 Or download pre-built archives for macOS / Linux / Windows from the
 [latest GitHub Release](https://github.com/holocron-lang/holocron/releases/latest)
-(each archive contains both binaries).
+(`holocron-lsp` ships from its
+[own releases](https://github.com/holocron-lang/holocron-lsp/releases)).
 
 To use the compiler as a Rust library:
 
