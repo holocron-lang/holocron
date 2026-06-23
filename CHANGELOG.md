@@ -2,6 +2,22 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v0.4.0](https://github.com/holocron-lang/holocron/compare/fae972a355a989046cc4f0f968b4ca04ecf7b13e..v0.4.0) - 2026-06-23
+#### Features
+- extract holocron-lsp into its own crate - ([0e72e09](https://github.com/holocron-lang/holocron/commit/0e72e0946d2993a4a34ecda2f83507ecadfcc0d8)) - darthVader, Claude Opus 4.7 (1M context)
+#### Build system
+- (**deps**) bump actions/upload-pages-artifact from 3 to 5 - ([46c56ad](https://github.com/holocron-lang/holocron/commit/46c56ad68bb5045a1e242aeb88dd6b03836fcf7e)) - dependabot[bot]
+- (**deps**) bump actions/configure-pages from 5 to 6 - ([db78735](https://github.com/holocron-lang/holocron/commit/db7873544bb313df7a9a2e66ca38dfb338feae07)) - dependabot[bot]
+- (**deps**) bump github/codeql-action from 3 to 4 - ([9fccc14](https://github.com/holocron-lang/holocron/commit/9fccc14e1083e53034d6223d1def6dfda7c396fb)) - dependabot[bot]
+- (**deps**) bump actions/deploy-pages from 4 to 5 - ([0a78b19](https://github.com/holocron-lang/holocron/commit/0a78b19b589ae3becab9b39e40da514edd6a2cce)) - dependabot[bot]
+- (**deps**) bump softprops/action-gh-release from 2 to 3 - ([6421d43](https://github.com/holocron-lang/holocron/commit/6421d43f227816d333b7b76e4857e777c42b0b99)) - dependabot[bot]
+- (**deps**) bump ariadne from 0.5.1 to 0.6.0 in the cargo group - ([fae972a](https://github.com/holocron-lang/holocron/commit/fae972a355a989046cc4f0f968b4ca04ecf7b13e)) - dependabot[bot]
+#### Miscellaneous Chores
+- (**meta**) track Mason package definition - ([b1e7f04](https://github.com/holocron-lang/holocron/commit/b1e7f046e1537108287f47c75a21c4ef5b5441f0)) - darthVader, Claude Opus 4.7 (1M context)
+- (**meta**) migrate org references to holocron-lang - ([df4b53f](https://github.com/holocron-lang/holocron/commit/df4b53f1e212995b52b7edba6a5467da606d3a50)) - darthVader, Claude Opus 4.7 (1M context)
+
+- - -
+
 ## [v0.3.0](https://github.com/extinctCoder/holocron/compare/83b99de1c8d36e659e42f4bf7bb62fd7be25d699..v0.3.0) - 2026-06-22
 #### Features
 - added lsp servers - ([83b99de](https://github.com/extinctCoder/holocron/commit/83b99de1c8d36e659e42f4bf7bb62fd7be25d699)) - darthVader
